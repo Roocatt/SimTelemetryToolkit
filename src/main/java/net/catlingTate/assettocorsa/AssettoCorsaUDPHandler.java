@@ -6,21 +6,31 @@ import net.catlingTate.error.STKNetworkError;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-public class AssettoCorsaUDPHandler extends UDPHandler {
+class AssettoCorsaUDPHandler extends UDPHandler {
+    private ACHandshakeResponse handshakeResponse;
+
     public AssettoCorsaUDPHandler() throws STKNetworkError {
         super(UDPHandler.getLocalhost(), UDPHandler.AC_PORT);
     }
 
     @Override
     protected void setup() throws STKNetworkError {
+        byte[] handshakeResponseBuffer;
+
         send(buildMessage(ACOperationID.HANDSHAKE));
+        handshakeResponseBuffer = receive(ACHandshakeResponse.TOTAL_LEN);
+        handshakeResponse = new ACHandshakeResponse(handshakeResponseBuffer);
     }
 
     @Override
     protected void cleanup() {
         try {
             send(buildMessage(ACOperationID.DISMISS));
-        } catch (STKNetworkError e) {} /* Ignore exception as it is on cleanup anyway */
+        } catch (STKNetworkError _) {} /* Ignore exception as it is on cleanup anyway */
+    }
+
+    protected ACHandshakeResponse getHandshakeResponse() {
+        return handshakeResponse;
     }
 
     private byte[] buildMessage(ACOperationID op) {

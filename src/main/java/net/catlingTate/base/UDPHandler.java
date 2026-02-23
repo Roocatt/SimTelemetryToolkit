@@ -47,13 +47,16 @@ public abstract class UDPHandler implements Closeable {
         }
     }
 
-    protected byte[] receive(int dataLen) throws IOException {
+    protected byte[] receive(int dataLen) throws STKNetworkError {
         DatagramPacket receivePacket;
         byte[] buffer = new byte[1024];
 
         receivePacket = new DatagramPacket(buffer, dataLen);
-        socket.receive(receivePacket);
-
+        try {
+            socket.receive(receivePacket);
+        } catch (IOException ex) {
+            throw new STKNetworkError(ex);
+        }
         return buffer;
     }
 
