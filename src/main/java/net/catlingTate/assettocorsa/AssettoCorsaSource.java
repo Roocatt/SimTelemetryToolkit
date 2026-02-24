@@ -1,19 +1,20 @@
 package net.catlingTate.assettocorsa;
 
 import net.catlingTate.base.STKSessionInfo;
-import net.catlingTate.base.STKBaseSource;
+import net.catlingTate.base.STKSource;
+import net.catlingTate.error.STKIOError;
 import net.catlingTate.error.STKNetworkError;
 
-public class AssettoCorsaSource implements STKBaseSource {
+public class AssettoCorsaSource implements STKSource {
     public final String SOURCE_NAME = "assetto corsa";
 
-    private final AssettoCorsaUDPHandler udpHandler;
+    private final AssettoCorsaUDPTelemetryHandler udpHandler;
 
     public AssettoCorsaSource() throws STKNetworkError {
-        udpHandler = new AssettoCorsaUDPHandler();
+        udpHandler = new AssettoCorsaUDPTelemetryHandler();
     }
 
-    public void start() throws STKNetworkError {
+    public void start() throws STKIOError {
         udpHandler.connect();
     }
 

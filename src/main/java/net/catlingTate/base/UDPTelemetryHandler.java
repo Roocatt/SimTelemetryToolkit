@@ -1,12 +1,13 @@
 package net.catlingTate.base;
 
+import net.catlingTate.error.STKIOError;
 import net.catlingTate.error.STKNetworkError;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.*;
 
-public abstract class UDPHandler implements Closeable {
+public abstract class UDPTelemetryHandler implements TelemetryHandler {
     public static final int AC_PORT = 9996;
 
 
@@ -15,13 +16,13 @@ public abstract class UDPHandler implements Closeable {
     private DatagramSocket socket;
     private boolean isClosed;
 
-    public UDPHandler(InetAddress inetAddress, int port) {
+    public UDPTelemetryHandler(InetAddress inetAddress, int port) {
         this.inetAddress = inetAddress;
         this.port = port;
         isClosed = true;
     }
 
-    public void connect() throws STKNetworkError {
+    public void connect() throws STKIOError {
         try {
             socket = new DatagramSocket();
             socket.connect(inetAddress, port);
@@ -57,6 +58,7 @@ public abstract class UDPHandler implements Closeable {
         } catch (IOException ex) {
             throw new STKNetworkError(ex);
         }
+
         return buffer;
     }
 

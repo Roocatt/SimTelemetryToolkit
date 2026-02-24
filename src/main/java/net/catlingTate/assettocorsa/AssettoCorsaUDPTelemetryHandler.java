@@ -1,16 +1,16 @@
 package net.catlingTate.assettocorsa;
 
-import net.catlingTate.base.UDPHandler;
+import net.catlingTate.base.UDPTelemetryHandler;
 import net.catlingTate.error.STKNetworkError;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-class AssettoCorsaUDPHandler extends UDPHandler {
+class AssettoCorsaUDPTelemetryHandler extends UDPTelemetryHandler {
     private ACHandshakeResponse handshakeResponse;
 
-    public AssettoCorsaUDPHandler() throws STKNetworkError {
-        super(UDPHandler.getLocalhost(), UDPHandler.AC_PORT);
+    public AssettoCorsaUDPTelemetryHandler() throws STKNetworkError {
+        super(UDPTelemetryHandler.getLocalhost(), UDPTelemetryHandler.AC_PORT);
     }
 
     @Override
@@ -27,6 +27,10 @@ class AssettoCorsaUDPHandler extends UDPHandler {
         try {
             send(buildMessage(ACOperationID.DISMISS));
         } catch (STKNetworkError _) {} /* Ignore exception as it is on cleanup anyway */
+    }
+
+    protected void subscribe() throws STKNetworkError {
+        send(buildMessage(ACOperationID.SUBSCRIBE_UPDATE));
     }
 
     protected ACHandshakeResponse getHandshakeResponse() {
