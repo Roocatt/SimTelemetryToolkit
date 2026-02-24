@@ -16,10 +16,10 @@ class ACHandshakeResponse {
     private final String driverName;
 
     @Getter
-    private final int id;
+    private final Integer id;
 
     @Getter
-    private final int version;
+    private final Integer version;
 
     @Getter
     private final String trackName;
